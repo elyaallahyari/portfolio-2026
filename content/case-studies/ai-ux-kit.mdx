@@ -1,0 +1,51 @@
+---
+title: 'AI-UX Kit'
+year: '2026'
+status: 'In progress'
+stack: 'React · TypeScript · Vercel AI SDK · Tailwind · npm'
+summary: 'A trust-first, open-source component library for AI interfaces — the missing AI layer for shadcn/ui. Streaming states, citations, confidence, and human-in-the-loop controls as composable primitives.'
+order: 1
+---
+
+## Problem
+
+Products everywhere are bolting chat boxes onto their interfaces, and users don't trust what they get back. The failures are almost never model failures — they're interface failures: claims you can't check, generations you can't stop, bulk AI edits with no undo, and errors that dead-end into "Something went wrong."
+
+While building my own AI features, I noticed something: design systems like shadcn/ui give you buttons, tables, dialogs — primitives for everything _except_ the AI moment. So every team re-invents the same five patterns, badly, from scratch. AI-UX Kit is my answer: what if trust in AI interfaces wasn't a feature each team improvises, but a library anyone can compose?
+
+## My role
+
+I'm the sole designer and engineer. I read the human–AI interaction research, translate the patterns that keep appearing in it into React primitives, build and document them, and dogfood every one of them in my own products — starting with this portfolio. I'm building in public, so the repo's history doubles as a design journal.
+
+## Process
+
+I started by auditing AI features I'd built and products I use daily, cataloguing every failure mode I could feel: streams I couldn't interrupt, citations buried in tooltips I never opened, autofill that overwrote my work with no way back, errors written for developers instead of humans.
+
+That catalogue became the pattern list: **streaming, citations, confidence, human-in-the-loop, graceful failure**. Then I forced a rule on myself — prototype every pattern as a rough React primitive _before_ polishing any of them. The docs site (in progress) will have a live playground where each component demos its own failure state on purpose. A component library whose docs show failures, not just successes, is exactly the point.
+
+## Key decisions
+
+- **Headless primitives over styled drop-in widgets.** Teams compose the behavior into their own design system. I rejected the "one-line chat widget" approach because it locks products into someone else's UX decisions — the opposite of what a trust layer should do.
+- **Optimistic AI edits with mandatory undo, over confirmation dialogs everywhere.** Dialogs teach users to click through without reading; undo scales. The trade-off is real engineering cost (state snapshots, edge cases), but it respects user agency instead of interrogating it.
+- **Confidence as interface state, not a number.** A raw "0.87" means nothing to a person. Confidence maps to visual treatment — an "AI suggested" chip, a low-confidence state with a visible fallback — so uncertainty becomes something you can _see and act on_.
+- **Interruptible streaming from day one.** The stream is wired to a real `AbortController` and a stop button that looks like a stop button. The trade-off: more states to design (stopped, partial, errored) — worth every one of them.
+
+## What failed
+
+My first streaming component faked token-by-token rendering with a timer after the full response had already arrived. It looked right and felt subtly wrong — and it made interruption impossible by design. It was a lie in the interface, so I rebuilt it on the Vercel AI SDK's real stream. My first citation design put sources in a hover tooltip; a keyboard user couldn't reach them at all. Sources now live inline, where the claim is made. Both failures taught me more than any success so far.
+
+## Evaluation
+
+I ran a small think-aloud study — five participants, the streaming and citation primitives — watching specifically for where trust broke. Nobody discovered tooltip citations. Everybody found the stop button the moment it looked like a button. I redesigned based on what I watched, not what I assumed. To be honest about method: n=5 makes this formative, not statistical — and that's exactly what it should be at this stage.
+
+## Stack
+
+React 19, TypeScript, Tailwind v4 design tokens, the Vercel AI SDK for real streaming, an MDX docs site with live playground, published to npm. Every component ships with its failure states as first-class API — not as an afterthought in a changelog.
+
+![Early prototype of the streaming response component showing interruptible states](/images/projects/ai-ux-kit-1.svg)
+
+![Citation component redesign — inline source chips instead of tooltips](/images/projects/ai-ux-kit-2.svg)
+
+## What's next
+
+Publish v0.1 to npm, finish the docs playground, and dogfood the whole library as the "Ask my portfolio" assistant on this site — the best test of a trust layer is trusting it with my own first impression. After that: a contribution guide, because a trust layer should be built by more than one person's perspective.
