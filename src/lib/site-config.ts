@@ -8,9 +8,10 @@ export const siteConfig = {
   email: 'elyaallahyari@gmail.com',
   github: 'https://github.com/elyaallahyari',
   linkedin: 'https://www.linkedin.com/in/elya-allahyari-0889a2200',
-  status: 'Open to MSc Human-Centered AI · Summer 2027',
+  status: 'Open to MSc Human-Centered AI · Fall 2027',
   nav: [
-    { label: 'Work', href: '/#work' },
+    { label: 'Work', href: '/work' },
+    { label: 'Writing', href: '/writing' },
     { label: 'Values', href: '/#values' },
     { label: 'Process', href: '/#process' },
     { label: 'About', href: '/#about' }

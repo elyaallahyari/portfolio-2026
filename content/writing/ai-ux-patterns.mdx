@@ -1,0 +1,99 @@
+---
+title: "5 AI-UX patterns I keep rebuilding"
+date: "2026-01-20"
+summary: "Every AI feature I've built needed the same five things — and every time, the model was fine and the interface was the problem. Here are the patterns, the code, and why each one is really about trust."
+tags: ["AI-UX", "Trust", "Frontend", "Human-Computer Interaction"]
+---
+
+Every AI feature I've ever shipped taught me the same embarrassing lesson: the model did its job, and the *interface* dropped the ball. Users didn't distrust the AI — they distrusted a UI that claimed things it couldn't source, generated things they couldn't stop, and failed things it couldn't explain.
+
+After the third time rebuilding the same pieces from scratch, I sat down and named the patterns. These five show up in every AI product I've touched since. I'm collecting them properly in [AI-UX Kit](/work/ai-ux-kit), my open-source component library — but the ideas matter more than the code, so here they are in plain form.
+
+## 1. Streaming people can stop
+
+A response that streams token-by-token *feels* alive — but if the user can't stop it, it's not a conversation, it's a broadcast. The moment someone realizes you got their question wrong, your interface has to give them the exit. Interruptibility isn't a nice-to-have; it's the difference between talking *with* someone and being talked at.
+
+```tsx
+const { text, status, stop } = useStream({
+  endpoint: "/api/chat",
+  onAbort: "keep-partial", // what's on screen stays on screen
+});
+
+<StreamingText text={text} status={status} />
+<button onClick={stop} disabled={status !== "streaming"}>Stop</button>
+```
+
+Why it's about trust: a stop button is a promise — *you are in control here*. My first version faked streaming with a timer and had no stop at all. It looked right and felt subtly wrong, and it took watching a confused user wait out a wrong answer to understand why.
+
+## 2. Citations where the claim is made
+
+If an answer says "studies show…" and the sources live in a hover tooltip three interactions away, most people will never check — and the ones who want to can't. A citation you can't reach is decoration, not evidence.
+
+```tsx
+<Claim
+  text="Retrieval-augmented answers reduce hallucination rates"
+  sources={[
+    { label: "paper", href: "https://arxiv.org/…" },
+    { label: "docs", href: "/docs/grounding" },
+  ]}
+/>
+```
+
+Why it's about trust: inline source chips turn "believe me" into "check me." The redesign lesson was harsh: in a five-person test, *nobody* found my tooltip citations — and one participant never realized the answer had sources at all. Claims now carry their evidence with them, inline and keyboard-reachable.
+
+## 3. Confidence you can see
+
+A model's raw confidence score — `0.87` — is a number for machines. People need a *state*: is this a suggestion I can skim, or a draft I should double-check? The interface should translate uncertainty into something visible and actionable.
+
+```tsx
+type Confidence = "high" | "medium" | "low";
+
+<AIField
+  confidence={confidence}
+  // high   → quiet "AI suggested" chip
+  // medium → chip + "review this" affordance
+  // low    → visibly dimmed draft, input stays untouched
+/>
+```
+
+Why it's about trust: honesty about uncertainty is the fastest route to calibrated trust — users who know when the system is shaky end up trusting it *more* when it's sure. A confident-looking wrong answer costs you more than a visibly tentative one ever will.
+
+## 4. Humans in the loop — before the damage, not after
+
+For anything bulk or irreversible, confirmation dialogs are the wrong tool: users click through them without reading, every single time. The better contract is a *plan preview* — show exactly what will change, let people edit the plan, and make undo real.
+
+```tsx
+<AIBulkAction
+  plan={aiSuggestedEdits}
+  renderPreview={(edits) => <TaskList tasks={edits} />}
+  onApprove={applyEdits}   // nothing happens before this
+  onUndo={restoreSnapshot} // and nothing is truly permanent
+/>
+```
+
+Why it's about trust: approval before action respects agency; undo after action forgives mistakes. Dialogs interrogate users ("Are you *sure*?") — previews collaborate with them. The engineering cost of state snapshots is real, and it's worth every line.
+
+## 5. Failure that explains itself
+
+`"Something went wrong"` is where trust goes to die. Errors written for developers — cryptic, dead-end, blameless in the worst way — tell users the system has no idea what just happened to them. A graceful failure names what broke, says what still works, and offers the next step.
+
+```tsx
+<AIResponse
+  state={status} // "loading" | "streaming" | "stopped" | "error"
+  renderError={(error, retry) => (
+    <ErrorState
+      title="The response was cut off"
+      detail="Your prompt is safe — try again or continue editing below."
+      onRetry={retry}
+    />
+  )}
+/>
+```
+
+Why it's about trust: people forgive failure; they don't forgive confusion. A failure state designed with the same care as the success state is the single loudest signal that a team respects its users — because it proves someone thought about the product when it *wasn't* working.
+
+## The pattern under the patterns
+
+Notice what all five have in common: none of them make the AI smarter. They make the AI *legible* — visible in its process, honest about its limits, interruptible in its actions, recoverable in its failures. That's what "human-centered AI" means to me in practice: not ethics statements, but interface states.
+
+I'm rebuilding all five as composable primitives in [AI-UX Kit](/work/ai-ux-kit) — with the failure states as first-class API, not an afterthought. If you're building AI features and hitting the same walls, I'd love to hear which pattern hurts you most.
