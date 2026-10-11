@@ -1,9 +1,3 @@
-// → app/opengraph-image.tsx  (replace entirely)
-// satori requires .ttf/.otf and rejects woff2 — and crashes on ANY invalid file.
-// Rules learned the hard way:
-//   1. validate the OpenType signature before handing bytes to satori
-//   2. NEVER pass fonts: [] — omit the key entirely so next/og uses its default
-//   3. make the fallback visible (console.warn), not silent
 import { ImageResponse } from 'next/og'
 import fs from 'fs'
 import path from 'path'
@@ -15,11 +9,10 @@ export const contentType = 'image/png'
 type DisplayFont = {
   name: string
   data: ArrayBuffer
-  weight: 400 | 700 // mirror satori's Weight union, not a loose number
+  weight: 400 | 700
   style: 'normal'
 }
 
-// Valid sfnt signatures: 00 01 00 00 (TrueType), OTTO (CFF), true, ttcf
 function hasValidFontSignature(buf: Buffer): boolean {
   if (buf.length < 12) return false
   const sig = buf.subarray(0, 4).toString('latin1')
@@ -28,8 +21,8 @@ function hasValidFontSignature(buf: Buffer): boolean {
 
 function loadDisplayFont(): DisplayFont | undefined {
   const candidates = [
-    'public/fonts/SpaceGrotesk-Bold.ttf', // static bold — best result
-    'public/fonts/SpaceGrotesk-VF.ttf', // variable TTF (renders default weight)
+    'public/fonts/SpaceGrotesk-Bold.ttf',
+    'public/fonts/SpaceGrotesk-VF.ttf',
     'public/fonts/SpaceGrotesk-Regular.ttf'
   ]
   for (const rel of candidates) {
@@ -42,12 +35,10 @@ function loadDisplayFont(): DisplayFont | undefined {
       return {
         name: 'Space Grotesk',
         data: new Uint8Array(buf).buffer as ArrayBuffer,
-        weight: 700 as const, // literal — satisfies Weight
+        weight: 700 as const,
         style: 'normal' as const
       }
-    } catch {
-      // file missing — try the next candidate
-    }
+    } catch {}
   }
   console.warn('[og] no valid TTF found in public/fonts/ — rendering with the default font')
   return undefined
@@ -69,7 +60,6 @@ export default async function Image() {
         position: 'relative'
       }}
     >
-      {/* subtle teal glow — radial gradient instead of blur (satori-safe) */}
       <div
         style={{
           position: 'absolute',
@@ -83,7 +73,6 @@ export default async function Image() {
           display: 'flex'
         }}
       />
-      {/* faint coral counter-glow */}
       <div
         style={{
           position: 'absolute',
@@ -98,7 +87,6 @@ export default async function Image() {
         }}
       />
 
-      {/* byline */}
       <div
         style={{
           display: 'flex',
@@ -114,7 +102,6 @@ export default async function Image() {
         <span>Frontend engineer, human-centered AI</span>
       </div>
 
-      {/* the line */}
       <div
         style={{
           display: 'flex',
@@ -130,7 +117,6 @@ export default async function Image() {
         <span style={{ color: '#ff6b4a' }}>.</span>
       </div>
 
-      {/* site url */}
       <div
         style={{
           display: 'flex',
@@ -144,7 +130,6 @@ export default async function Image() {
     </div>,
     {
       ...size,
-      // omit the key entirely when no font — `fonts: []` crashes satori
       ...(font ? { fonts: [font] } : {})
     }
   )
