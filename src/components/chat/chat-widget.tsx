@@ -77,6 +77,7 @@ export function ChatWidget() {
 
           <div
             className="flex-1 space-y-4 overflow-y-auto px-4 py-4"
+            role="log"
             aria-live="polite"
             aria-atomic="false"
           >
@@ -120,14 +121,14 @@ export function ChatWidget() {
 
                     {m === messages[messages.length - 1] && grounded && (
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-[0.68rem] uppercase tracking-wide text-muted">
+                        <span className="text-xs uppercase tracking-wide text-muted">
                           {grounded.refused ? 'not grounded' : 'grounded in:'}
                         </span>
                         {grounded.sources.map((s) => (
                           <a
                             key={s.href + s.title}
                             href={s.href}
-                            className="rounded-full border border-trust/40 px-2 py-0.5 text-[0.68rem] text-trust transition-colors hover:bg-trust/10"
+                            className="rounded-full border border-trust/40 px-2.5 py-1 text-xs text-trust transition-colors hover:bg-trust/10"
                           >
                             {s.title}
                           </a>
@@ -174,6 +175,7 @@ export function ChatWidget() {
               ref={inputRef}
               name="q"
               autoComplete="off"
+              aria-label="Your question"
               placeholder={busy ? 'answering…' : "Ask about Elya's work…"}
               className="min-w-0 flex-1 rounded-full border border-line bg-glass px-4 py-2 text-sm text-cream placeholder:text-muted focus:border-trust focus:outline-none"
             />

@@ -59,7 +59,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <Navbar />
         <ChatWidget />
-        <main id="main">{children}</main>
+        <main id="main" tabIndex={-1}>
+          {children}
+        </main>
         <Footer />
         <script
           type="application/ld+json"

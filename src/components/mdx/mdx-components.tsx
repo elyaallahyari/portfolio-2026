@@ -29,7 +29,15 @@ export const mdxComponents: MDXComponents = {
   ),
   hr: () => <hr className="mt-14 border-line" />,
   img: (props) => (
-    <img alt="image" className="mt-8 rounded-2xl border border-line" loading="lazy" {...props} />
+    <img
+      width={1200}
+      height={675}
+      alt="image"
+      loading="lazy"
+      decoding="async"
+      className="mt-8 h-auto rounded-2xl border border-line"
+      {...props}
+    />
   ),
   code: (props) => (
     <code

@@ -112,6 +112,10 @@ body {
   transform: none;
 }
 
+[tabindex='-1']:focus {
+  outline: none;
+}
+
 @keyframes blink {
   50% {
     opacity: 0;
