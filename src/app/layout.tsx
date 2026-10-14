@@ -4,6 +4,7 @@ import './globals.css'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { siteConfig } from '@/lib/site-config'
+import { ChatWidget } from '@/components/chat/chat-widget'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
         <Navbar />
+        <ChatWidget />
         <main id="main">{children}</main>
         <Footer />
         <script

@@ -1,13 +1,12 @@
 import fs from 'fs'
 import path from 'path'
 import { embedMany } from 'ai'
-import { prisma, embeddingModel } from '../lib/rag/retrieval'
+import { prisma, embeddingModel } from '../src/lib/rag/retrieval'
+import { getAllCaseStudies } from '../src/lib/case-studies'
+import { getAllWritingPosts } from '../src/lib/writing'
 
 type RawChunk = { sourceTitle: string; sourceHref: string; content: string }
 
-// Simple but honest chunking: split on markdown headings, then merge
-// paragraphs into ~900-char chunks. Overkill algorithms are how side
-// projects die; the corpus here is six documents.
 function chunkText(text: string, maxLen = 900): string[] {
   const paragraphs = text
     .replace(/\r/g, '')
@@ -32,10 +31,6 @@ function chunkText(text: string, maxLen = 900): string[] {
 async function main() {
   const raw: RawChunk[] = []
 
-  // Case studies & writing — reuse the same data layer the site uses
-  const { getAllCaseStudies } = await import('../lib/case-studies')
-  const { getAllWritingPosts } = await import('../lib/writing')
-
   for (const study of getAllCaseStudies()) {
     for (const chunk of chunkText(study.content)) {
       raw.push({
@@ -56,7 +51,6 @@ async function main() {
     }
   }
 
-  // Resume — a plain .txt at content/resume.txt (drop your CV text there)
   const resumePath = path.join(process.cwd(), 'content', 'resume.txt')
   if (fs.existsSync(resumePath)) {
     const resume = fs.readFileSync(resumePath, 'utf8')

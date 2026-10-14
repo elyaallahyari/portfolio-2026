@@ -1,18 +1,20 @@
-import 'server-only'
 import { createOpenAI } from '@ai-sdk/openai'
-import { PrismaClient } from '@prisma/client/extension'
+import { PrismaClient } from '@/generated/prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
 import { embed } from 'ai'
 
 const provider = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  baseURL: process.env.OPENAI_BASE_URL // OpenRouter / Groq / local Ollama / …
+  baseURL: process.env.OPENAI_BASE_URL
 })
 
 export const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL ?? 'text-embedding-3-small'
 export const CHAT_MODEL = process.env.CHAT_MODEL ?? 'openai/gpt-4o-mini'
 export const MIN_SIMILARITY = Number(process.env.RAG_MIN_SIMILARITY ?? 0.3)
 
-export const prisma = new PrismaClient()
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
+export const prisma = new PrismaClient({ adapter })
+
 export const embeddingModel = provider.textEmbeddingModel(EMBEDDING_MODEL)
 
 export type GroundedSource = { title: string; href: string; similarity: number }
@@ -23,9 +25,6 @@ export async function embedQuery(text: string): Promise<number[]> {
   return embedding
 }
 
-// pgvector cosine distance (0 = identical) → similarity = 1 - distance.
-// The embedding is passed as a '[1,2,3]' literal — the documented pattern
-// for Unsupported() columns via $queryRaw.
 export async function retrieve(queryEmbedding: number[], k = 5): Promise<RetrievedChunk> {
   const literal = `[${queryEmbedding.join(',')}]`
 
@@ -42,10 +41,9 @@ export async function retrieve(queryEmbedding: number[], k = 5): Promise<Retriev
   const sources: GroundedSource[] = rows.map((r) => ({
     title: r.sourceTitle,
     href: r.sourceHref,
-    similarity: 1 - r.distance
+    similarity: 1 - Number(r.distance)
   }))
 
-  // Confidence gate: weak retrieval → the model gets NOTHING to paraphrase.
   const best = sources[0]?.similarity ?? 0
   const confident = best >= MIN_SIMILARITY
 
