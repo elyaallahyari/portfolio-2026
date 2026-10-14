@@ -1,21 +1,11 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
+import '@fontsource-variable/space-grotesk'
+import '@fontsource-variable/inter'
 import './globals.css'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { siteConfig } from '@/lib/site-config'
 import { ChatWidget } from '@/components/chat/chat-widget'
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-space-grotesk',
-  display: 'swap'
-})
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap'
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -52,17 +42,17 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   }
 
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+    <html lang="en">
       <body>
         <a href="#main" className="skip-link">
           Skip to content
         </a>
         <Navbar />
-        <ChatWidget />
         <main id="main" tabIndex={-1}>
           {children}
         </main>
         <Footer />
+        <ChatWidget />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
