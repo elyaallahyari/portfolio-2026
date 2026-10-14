@@ -1,0 +1,32 @@
+Elya Allahyari — Frontend Developer | React · Next.js · TypeScript
+Tehran, Iran — open to remote. Email: elyaallahyari@gmail.com
+
+PROFESSIONAL SUMMARY
+Frontend Developer specializing in React, Next.js, and TypeScript with experience shipping scalable, production-ready web applications. Skilled in building authentication flows, admin dashboards, design-system components, and data-intensive UIs. Recently architected a full-stack workspace app with Kanban, Calendar, and Timeline views. Focused on clean code, performance, and seamless collaboration with backend teams. Direction: human-centered AI — building AI products people can trust, from streaming UX to accessibility.
+
+TECHNICAL SKILLS
+Frontend core: React, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, SCSS, shadcn/ui, responsive design, HTML5, CSS3.
+State and data fetching: TanStack Query, SWR, Context API, Axios, REST APIs.
+Backend and auth: Nest.js, Node.js, Express.js, Prisma, PostgreSQL, MongoDB, JWT, NextAuth.js.
+Tools and workflow: Git & GitHub, Docker, Figma, Postman, VS Code, Agile/Scrum, Vercel, Ollama, the Vercel AI SDK.
+
+WORK EXPERIENCE
+Frontend Developer Intern — Part Software Group, Mashhad, Iran (Jul 2024 – Jan 2025). Developed and shipped production-ready features for a customer management platform in an Agile team. Built 15+ reusable UI components and dynamic, validated forms to accelerate feature delivery. Integrated REST APIs with optimized client-side fetching, caching, and error handling. Implemented authentication workflows, form validation, and role-aware UI states. Collaborated daily with backend developers and designers via Git, code review, and Figma.
+
+EDUCATION
+B.Sc. in Computer Engineering — Sadjad University of Technology, Mashhad, Iran, 2020–2024.
+
+PROJECT: AI-UX Kit (2026, in progress)
+A trust-first open-source component library for AI interfaces — the missing AI layer for shadcn/ui. Streaming states, inline citations, confidence indicators, human-in-the-loop controls, and graceful failure states as composable React primitives. Built with React, TypeScript, the Vercel AI SDK, and Tailwind; published to npm. Runs a formative think-aloud study (n=5) on its streaming and citation primitives.
+
+PROJECT: TaskLine (live at taskline-elya.vercel.app)
+Full-stack workspace app for planning, organizing and tracking work. Monorepo (Next.js web + NestJS API) with PostgreSQL and Prisma ORM, Dockerized for local development. Interactive Kanban boards with drag-and-drop via dnd-kit and optimistic UI updates, month Calendar view, Timeline view, JWT authentication, and TanStack Query for cached data fetching. A Copilot phase adds natural-language task capture, AI task breakdowns with plan preview before bulk edits, full undo, and visible confidence.
+
+PROJECT: TechnoLife Ecommerce Platform
+Full-featured ecommerce frontend with SSR and SEO-friendly product pages, secure authentication and protected admin dashboard routes with NextAuth.js, a reusable Tailwind design system, and REST integration with SWR caching.
+
+PROJECT: Online Education Platform (Coursera-like)
+Full-stack learning platform with course browsing, instructor profiles, cart, student dashboard, JWT auth with role-based access control, and an admin dashboard with analytics. Integrated a local AI chat assistant with Ollama to answer course-related questions.
+
+VALUES AND INTERESTS
+Human-AI trust, AI-UX patterns (streaming, citations, confidence, human-in-the-loop, graceful failure), accessibility (WCAG 2.1 AA, the European Accessibility Act), AI ethics in practice, performance as UX, design systems. Goal: MSc in Human-Centered AI in Europe (Regensburg, TU Eindhoven, UvA, TU Wien are candidate programs), starting Summer 2027.

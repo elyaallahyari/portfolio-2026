@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  runtime  = "nodejs"
+}
+
+datasource db {
+  provider = "postgresql"
+  // no url line in Prisma 7 — connection lives in prisma.config.ts (migrate)
+  // and in the PrismaPg adapter (client)
+}
+
+model RagChunk {
+  id          Int                         @id @default(autoincrement())
+  sourceTitle String
+  sourceHref  String
+  content     String
+  // managed by raw SQL migration, accessed only via $queryRaw
+  embedding   Unsupported("vector(1536)")?
+}
