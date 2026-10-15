@@ -20,14 +20,11 @@ function hasValidFontSignature(buf: Buffer): boolean {
 }
 
 function loadDisplayFont(): DisplayFont | undefined {
-  const candidates = [
-    'public/fonts/SpaceGrotesk-Bold.ttf',
-    'public/fonts/SpaceGrotesk-VF.ttf',
-    'public/fonts/SpaceGrotesk-Regular.ttf'
-  ]
+  const fontsDir = path.join(process.cwd(), 'public', 'fonts')
+  const candidates = ['SpaceGrotesk-Bold.ttf', 'SpaceGrotesk-VF.ttf', 'SpaceGrotesk-Regular.ttf']
   for (const rel of candidates) {
     try {
-      const buf = fs.readFileSync(path.join(process.cwd(), rel))
+      const buf = fs.readFileSync(path.join(fontsDir, rel))
       if (!hasValidFontSignature(buf)) {
         console.warn(`[og] skipping invalid font file (bad signature): ${rel}`)
         continue
